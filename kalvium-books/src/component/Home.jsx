@@ -1,71 +1,78 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 import "./Home.css";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import logo from "../assets/logo.png"  
 
 const Home = () => {
   const [books, setBooks] = useState([]);
-  const [search, setSearch] = useState('');
-  const isUserRegistered = localStorage.getItem("isUserRegistered");
-
+  const [search, setSearch] = useState("");
+  
+  // Fetching API
   useEffect(() => {
-    axios.get('https://reactnd-books-api.udacity.com/books', { headers: { 'Authorization': 'whatever-you-want' } })
-      .then(res => setBooks(res.data.books))
-      .catch(err => console.log(err));
+    axios
+      .get("https://reactnd-books-api.udacity.com/books", {
+        headers: { Authorization: "whatever-you-want" },
+      })
+      .then((res) => setBooks(res.data.books))
+      .catch((err) => console.log(err));
   }, []);
 
+  // Function to give the Searched book by the user 
   const handleSearch = (e) => {
-    setSearch(e.target.value);
+    e.preventDefault();
+    const userInput = e.target.value;
+    setSearch(userInput);
   };
 
-  const filteredBooks = books.filter(book =>
+  //Function to filter all the books from the api 
+  const filteredBooks = books.filter((book) =>
     book.title.toLowerCase().includes(search.toLowerCase())
   );
 
-  const notify = () => {
-    toast.success("Registration Successful!", {
-      position: toast.POSITION.TOP_LEFT
-    });
-  };
-
+//Render the Home Page
   return (
     <>
-      <div className='header'>
-        <div className='logo'>
-          <img src="" alt="" />
-          <h3>Book Store</h3>
-          <div className='search-bar-div'>
-            <input onInput={handleSearch} className='search-bar' type="text" placeholder="Search books..." />
-            <img src="./assets/Search_logo.png" alt="" />
+      <div className="header">
+        <div className="logo">
+          <img className="lo" src={logo} alt="" />
+          <div className="search-bar-div">
+            <input
+              onChange={handleSearch}
+              className="search-bar"
+              type="text"
+              placeholder="Search books..."
+            />
           </div>
         </div>
 
-        <div className='register-btn-div'>
-          {isUserRegistered ? (
-            // If the user is registered, do not render the "Register" button
-            <></>
-          ) : (
-            <Link to="/register">
-              <button className='register-btn' onClick={notify}>Register</button>
-            </Link>
-          )}
+        <div className="register-btn-div">
+          <Link to="/register">
+            <button className="register-btn">Register</button>
+          </Link>
           <img src="github" alt="" />
         </div>
       </div>
 
-      <div className='books-library'>
-        {filteredBooks.map(book => (
-          <div key={book.id} className='book'>
-            <a className="pointer" href={book.previewLink} target='blank'>
-              <img src={book.imageLinks.thumbnail} alt="" />
-            </a>
-            <h4 className='book-title'>{book.title}</h4>
-          </div>
-        ))}
+      <div className="books-library">
+        {filteredBooks.length === 0 ? (
+          <h2>No books found :( </h2>
+        ) : (
+          filteredBooks.map((book) => (
+            <div key={book.id} className="book">
+              <a className="pointer" href={book.previewLink} target="blank">
+                <img
+                  className="book-img"
+                  src={book.imageLinks.thumbnail}
+                  alt=""
+                />
+              </a>
+              <h4 className="book-title">{book.title}</h4>
+              <p>⭐ Free</p>
+            </div>
+          ))
+        )}
       </div>
-      <ToastContainer />
     </>
   );
 };

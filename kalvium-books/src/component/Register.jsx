@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Register.css";
+import { useNavigate } from "react-router-dom";
 
+// Declaring the State for the Registration form
 const Forms = () => {
+  const navigate = useNavigate()
   const [data, setData] = useState({
     firstName: "",
     email: "",
@@ -14,6 +17,8 @@ const Forms = () => {
   const [error, setError] = useState({});
   const [formSubmit, setFormSubmit] = useState(false);
 
+
+
   const handleInput = (e) => {
     let { name, value } = e.target;
     setData({
@@ -22,6 +27,7 @@ const Forms = () => {
     });
   };
 
+  // Handling form Submissions
   const handleSubmit = (e) => {
     e.preventDefault();
     const errors = validate(data);
@@ -30,11 +36,16 @@ const Forms = () => {
     if (Object.keys(errors).length === 0) {
       setFormSubmit(true);
       notify();
+      navigate("/")
+
     } else {
       setFormSubmit(false);
     }
+
   };
 
+
+// Checks for any error in the form and gives appropriate message
   const validate = (data) => {
     let errors = {};
 
@@ -48,20 +59,22 @@ const Forms = () => {
 
     if (data.password.trim() === "") {
       errors.password = "Please enter the Password";
-    } else if (!/(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]).{10,}/.test(data.password)) {
-      errors.password = "Password must at least 10 characters with one special character";
+    } 
+    else if (!/(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]).{10,}/.test(data.password)) {
+      errors.password = "Password must be at least 10 characters with one special character";
     }
 
     if (data.passwordAgain.trim() === "") {
       errors.passwordAgain = "Please enter the Password again";
-    } else if (data.passwordAgain !== data.password) {
+    } 
+    else if (data.passwordAgain !== data.password) {
       errors.passwordAgain = "Password does not match! Please try again";
     }
 
     return errors;
   };
 
-  const notify = () => toast("Registration Successful :)");
+  //Renders the Registration Form
 
   return (
     <>
@@ -130,11 +143,11 @@ const Forms = () => {
               ""
             )}
           </div>
-
           <input
             type="submit"
             value={"Sign Up"}
             className="submitButton"
+            onClick={notify}
           />
           {formSubmit && <ToastContainer />}
         </form>
