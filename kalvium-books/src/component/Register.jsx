@@ -147,7 +147,7 @@ const Forms = () => {
             type="submit"
             value={"Sign Up"}
             className="submitButton"
-            onClick={notify}
+            // onClick={notify}
           />
           {formSubmit && <ToastContainer />}
         </form>
