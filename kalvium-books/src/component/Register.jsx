@@ -35,7 +35,6 @@ const Forms = () => {
 
     if (Object.keys(errors).length === 0) {
       setFormSubmit(true);
-      notify();
       navigate("/")
 
     } else {
@@ -147,7 +146,7 @@ const Forms = () => {
             type="submit"
             value={"Sign Up"}
             className="submitButton"
-            // onClick={notify}
+            onClick={handleSubmit}
           />
           {formSubmit && <ToastContainer />}
         </form>
